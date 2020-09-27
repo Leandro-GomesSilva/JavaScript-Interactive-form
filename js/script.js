@@ -5,7 +5,7 @@ Author: Leandro Gomes
 */
 
 
-// Making the field for the "Other Job Role" invisible when the page loads and turning it visible when "Other" is selected
+// Making the field for the "Other Job Role" invisible when the page loads and turning it visible when "Other" is selected.
 const title = document.getElementById('title');
 const otherTitle = document.getElementById('other-title');
 
@@ -15,7 +15,7 @@ title.addEventListener ('change', () => {
     if (title.value === "other") {
         otherTitle.style.display = 'inherit';
     } else {
-        otherTitle.value = '';
+        otherTitle.value = '';      // Cleaning the text field in case the option "Other" is unselected.
         otherTitle.style.display = 'none';
     }
 });
@@ -28,27 +28,32 @@ title.addEventListener ('change', () => {
  * 
  */
 
-// Selecting elements by ID and storing all children elements of the 'Color element' in a variable.
+// Selecting elements by ID and storing all children elements of the 'Color element' in an array.
 const design = document.getElementById('design');
+const colorDiv = document.getElementById('shirt-colors');
 const color = document.getElementById('color');
 const colorChildren = color.children;
+
  
-// For the label "Design": setting the first option "Select Theme" as a hidden and not-selectable value.
+// For the label "Design": setting the first option "Select Theme" as a hidden and not-selectable value (I could have done it in the HTML as well).
 const designFirstChild = design.firstElementChild;
 designFirstChild.selected = true;
 designFirstChild.hidden = true;
 
-// For the label "Color": creating a new default, hidden and not-selectable option "Please select a T-shirt theme".
-const colorNewElementChild = document.createElement('option');
-colorNewElementChild.selected = true;
-colorNewElementChild.hidden = true;
-colorNewElementChild.textContent = 'Please select a T-shirt theme';
-color.insertBefore(colorNewElementChild, color.firstElementChild);
-
 // Hiding by default all colours when the page loads.
-for (i = 0; i < colorChildren.length; i++) {
-colorChildren[i].style.display = 'none';
+for ( i = 0; i < colorChildren.length; i++ ) {
+    colorChildren[i].style.display = 'none';
 }
+
+// Hidding the Color Label, since no design is selected by default.
+colorDiv.style.display = 'none';
+
+//const colorNewElementChild = document.createElement('option');
+
+//colorNewElementChild.selected = true;
+//colorNewElementChild.hidden = true;
+//colorNewElementChild.textContent = 'Please select a T-shirt theme';
+//color.insertBefore(colorNewElementChild, color.firstElementChild);
 
 
 /**
@@ -84,36 +89,153 @@ const displayArray = [
 
 let arrayIndex = -1;
 
-// This second array of objects determines for each design which option will "selected" i.e. "default".
-const selectedArray = [ { cornflowerblue: 'true' }, { tomato: 'true' } ];
+// This second array of objects determines which option will "selected" i.e. "default" for each design.
+const selectedArray = [ { cornflowerblue: true }, { tomato: true } ];
 
-// Function for the Listener: changes the array index according to the chosen design and calls the corresponding value in the arrays of objects for the display option and the selected option.
-function matchingDesignColor () {
+
+/** Adding the Event Listener that looks for changes in the dropdown menu.
+*   The Event Handler does the following:
+*   1. Changes the array index according to the chosen design (0 or 1).
+*   2. Gets the corresponding value in the two arrays of objects (display options and the default selected option).
+*/
+
+design.addEventListener('change', () => {
     if (design.value === "js puns") {
         arrayIndex = 0;
     } else if (design.value === "heart js") {
         arrayIndex = 1;
     }
 
-    for (i = 0; i < colorChildren.length; i++) {
+    for ( i = 0; i < colorChildren.length; i++ ) {
         colorChildren[i].style.display = displayArray[arrayIndex][colorChildren[i].value];
         colorChildren[i].selected = selectedArray[arrayIndex][colorChildren[i].value];
     }
-}
-
-// Adding the Event Listener that looks for changes in the dropdown menu
-design.addEventListener('change', matchingDesignColor);
+});
 
 
 /**
  * 
- *  Register for Activities Section:
- *  Disabling time-conflicting checkbox items
+ *  Register for Activities Section
  * 
  */
 
- const activities = document.getElementsByClassName('activities');
- const activitiesChildren = ;
+// Getting DOM elements
+const activities = document.getElementsByClassName('activities');
+const activitiesChildren = activities[0].children;
+
+// Creating and appending DOM elements to show the costs
+const costDiv = document.createElement('div');
+costDiv.innerHTML = `<span>Total: </span>`;
+const costSpan = document.createElement('span');
+costDiv.appendChild(costSpan);
+activities[0].appendChild(costDiv);
 
 
- 
+/***
+ * `showCosts` function
+ * 1. Checks which checkboxes are checked and adds up their costs to the totalCosts variable.
+ * 2. Updates the textContent of the 'span element' with the current costs.
+ * 3. Shows up the costs in the page if the costs are bigger then 0.
+ * 
+ * @returns
+ * 
+ */
+function showCosts () {  
+    let totalCosts = 0;
+    
+    // Step 1
+    for ( i = 1; i < activitiesChildren.length; i++ ) {       // This "for" starts at 1 because the array position 0 is occupied by the element "legend".
+        if ( activitiesChildren[i].firstElementChild.checked ) {
+            totalCosts += parseInt(activitiesChildren[i].firstElementChild.getAttribute('data-cost'));
+        }
+    }
+    
+    // Step 2
+    costSpan.textContent = totalCosts;
+    
+    // Step 3
+    if (totalCosts > 0) {
+        costDiv.style.display = 'inherit';
+    } else costDiv.style.display = 'none';
+
+    return;
+}
+
+// Calls the function when the page loads.
+showCosts();
+
+// Event Listener for the checkbox items
+activities[0].addEventListener('click', (e) => {
+    if (e.target.tagName == 'INPUT') {
+        
+        // Storing the relevant information of the "event" into variables.
+        const isChecked = e.target.checked;
+        const targetDayAndTime = e.target.getAttribute('data-day-and-time');
+        const targetName = e.target.getAttribute('name');
+        
+        for ( i = 1; i < activitiesChildren.length; i++ ) {   // This "for" starts at 1 because the array position 0 is occupied by the element "legend".
+            
+            // Checks 1. if the event target is checked, 2. if the "child element" is NOT itself and last but not least 3. if the day and time are the same.
+            if ( isChecked && targetName !== activitiesChildren[i].firstElementChild.getAttribute('name') && targetDayAndTime === activitiesChildren[i].firstElementChild.getAttribute('data-day-and-time') ) {
+                activitiesChildren[i].firstElementChild.disabled = true;
+            } 
+            // The same as above, but now for the case the event target is UNCHECKED.
+            else if ( targetName !== activitiesChildren[i].firstElementChild.getAttribute('name') && targetDayAndTime === activitiesChildren[i].firstElementChild.getAttribute('data-day-and-time') ) {
+                activitiesChildren[i].firstElementChild.disabled = false;
+            };
+
+        }
+
+        // Calls the function every time a checkbox is clicked.
+        showCosts();
+    }
+});
+
+
+/**
+ * 
+ *  Payment Section
+ * 
+ */
+
+
+ // Selecting elements by ID and storing "option elements" for "payment" in a variable
+const payment = document.getElementById('payment');
+const creditCard = document.getElementById('credit-card');
+const paypal = document.getElementById('paypal');
+const bitcoin = document.getElementById('bitcoin');
+const paymentChildren = payment.children;
+
+// Making "credit card" default selected and preventing "Select you payment method" of being selected 
+for (i = 0; i < paymentChildren.length; i++ ) {
+    if ( paymentChildren[i].value === 'select method') {
+        paymentChildren[i].disabled = true;
+    }
+    if ( paymentChildren[i].value === 'credit card') {
+        paymentChildren[i].selected = true;
+    }
+}
+
+//  Displaying only the credit card options after the page loads.
+paypal.style.display = 'none';
+bitcoin.style.display = 'none';
+
+// Displaying in the page the selected option when the user clicks a payment method in the dropdown menu
+payment.addEventListener('change', (e) => { 
+    const paymentMethod = e.target.value;
+    if ( paymentMethod === 'credit card' ) {
+        creditCard.style.display = 'inherit';
+        paypal.style.display = 'none';
+        bitcoin.style.display = 'none';
+    }
+    if ( paymentMethod === 'paypal' ) {
+        creditCard.style.display = 'none';
+        paypal.style.display = 'inherit';
+        bitcoin.style.display = 'none';
+    }
+    if ( paymentMethod === 'bitcoin' ) {
+        creditCard.style.display = 'none';
+        paypal.style.display = 'none';
+        bitcoin.style.display = 'inherit';
+    }
+});
