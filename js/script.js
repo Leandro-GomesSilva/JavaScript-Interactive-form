@@ -5,6 +5,12 @@ Author: Leandro Gomes
 */
 
 
+/**
+ * 
+ *  Field "Other Job Role"
+ * 
+ */
+
 // Making the field for the "Other Job Role" invisible when the page loads and turning it visible when "Other" is selected.
 const title = document.getElementById('title');
 const otherTitle = document.getElementById('other-title');
@@ -28,33 +34,20 @@ title.addEventListener ('change', () => {
  * 
  */
 
-// Selecting elements by ID and storing all children elements of the 'Color element' in an array.
+// Selecting DOM elements by ID and storing all children elements of the 'Color element' in an array.
 const design = document.getElementById('design');
 const colorDiv = document.getElementById('shirt-colors');
 const color = document.getElementById('color');
 const colorChildren = color.children;
 
  
-// For the label "Design": setting the first option "Select Theme" as a hidden and not-selectable value (I could have done it in the HTML as well).
+// For the label "Design": setting the first option "Select Theme" as a hidden and not-selectable value (it can be done in the HTML as default as well).
 const designFirstChild = design.firstElementChild;
 designFirstChild.selected = true;
 designFirstChild.hidden = true;
 
-// Hiding by default all colours when the page loads.
-for ( i = 0; i < colorChildren.length; i++ ) {
-    colorChildren[i].style.display = 'none';
-}
-
 // Hidding the Color Label, since no design is selected by default.
 colorDiv.style.display = 'none';
-
-//const colorNewElementChild = document.createElement('option');
-
-//colorNewElementChild.selected = true;
-//colorNewElementChild.hidden = true;
-//colorNewElementChild.textContent = 'Please select a T-shirt theme';
-//color.insertBefore(colorNewElementChild, color.firstElementChild);
-
 
 /**
  * 
@@ -95,11 +88,14 @@ const selectedArray = [ { cornflowerblue: true }, { tomato: true } ];
 
 /** Adding the Event Listener that looks for changes in the dropdown menu.
 *   The Event Handler does the following:
-*   1. Changes the array index according to the chosen design (0 or 1).
-*   2. Gets the corresponding value in the two arrays of objects (display options and the default selected option).
+*   1. Turning the color label visible.
+*   2. Changes the array index according to the chosen design (0 or 1) and displaying the color.
+*   3. Gets the corresponding value in the two arrays of objects (display options and the default selected option).
 */
 
 design.addEventListener('change', () => {
+    colorDiv.style.display = 'inherit';
+    
     if (design.value === "js puns") {
         arrayIndex = 0;
     } else if (design.value === "heart js") {
@@ -220,22 +216,22 @@ for (i = 0; i < paymentChildren.length; i++ ) {
 paypal.style.display = 'none';
 bitcoin.style.display = 'none';
 
-// Displaying in the page the selected option when the user clicks a payment method in the dropdown menu
+// Displaying in the page the selected option when the user clicks a payment method in the dropdown menu.
+// I first did it using three IF-statements, but then I managed to compact it a lot by declaring a object of arrays.
+
 payment.addEventListener('change', (e) => { 
-    const paymentMethod = e.target.value;
-    if ( paymentMethod === 'credit card' ) {
-        creditCard.style.display = 'inherit';
-        paypal.style.display = 'none';
-        bitcoin.style.display = 'none';
-    }
-    if ( paymentMethod === 'paypal' ) {
-        creditCard.style.display = 'none';
-        paypal.style.display = 'inherit';
-        bitcoin.style.display = 'none';
-    }
-    if ( paymentMethod === 'bitcoin' ) {
-        creditCard.style.display = 'none';
-        paypal.style.display = 'none';
-        bitcoin.style.display = 'inherit';
-    }
+    
+    const paymentMethod = e.target.value.replace(/\s+/, "");    // This "replace" is needed, since the "value" of the credit card option is written with a space and I couldn't declare the corresponding object property with a space.
+
+    // Object, whose properties are arrays containing the display options for each payment method
+    const displayStatusPayment = {
+        creditcard: ['inherit', 'none', 'none'],
+        paypal: ['none', 'inherit', 'none'],
+        bitcoin: ['none', 'none', 'inherit'],
+    };
+
+    // These 3 lines of code below substitute three boring IF-statements
+    creditCard.style.display = displayStatusPayment[paymentMethod][0];
+    paypal.style.display = displayStatusPayment[paymentMethod][1];
+    bitcoin.style.display = displayStatusPayment[paymentMethod][2];
 });
