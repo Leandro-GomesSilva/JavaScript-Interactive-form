@@ -1,15 +1,19 @@
-/*
-Treehouse Techdegree:
-FSJS Project 3 - Interactive Form
-Author: Leandro Gomes
-*/
+/******************************************************************************************************
+*******************************************************************************************************
+ *
+    Treehouse Techdegree:
+    FSJS Project 3 - Interactive Form
+    Author: Leandro Gomes
+ *    
+******************************************************************************************************
+******************************************************************************************************/
 
 
-/**
+/******************************************************************************************************
  * 
  *  Field "Other Job Role"
  * 
- */
+ *****************************************************************************************************/
 
 // Making the field for the "Other Job Role" invisible when the page loads and turning it visible when "Other" is selected.
 const title = document.getElementById('title');
@@ -27,12 +31,12 @@ title.addEventListener ('change', () => {
 });
 
 
-/**
+/******************************************************************************************************
  * 
  *  T-Shirt Info Section, Part 1:
- *  Setting default options for the labels "Design" and "Color" 
+ *  Setting default options for the "Design" and "Color" labels
  * 
- */
+ *****************************************************************************************************/
 
 // Selecting DOM elements by ID and storing all children elements of the 'Color element' in an array.
 const design = document.getElementById('design');
@@ -49,12 +53,12 @@ designFirstChild.hidden = true;
 // Hidding the Color Label, since no design is selected by default.
 colorDiv.style.display = 'none';
 
-/**
+/******************************************************************************************************
  * 
  *  T-Shirt Info Section, Part 2:
  *  Setting the color options to only display for the matching design
  * 
- */
+ *****************************************************************************************************/
 
 /* Declaring an Array of Objects 
  *  Each array index has an object, which corresponds to a design type. 
@@ -80,17 +84,18 @@ const displayArray = [
     }
 ];
 
-let arrayIndex = -1;
-
 // This second array of objects determines which option will "selected" i.e. "default" for each design.
 const selectedArray = [ { cornflowerblue: true }, { tomato: true } ];
 
+// Initializing the arrayIndex variable
+let arrayIndex = -1;
 
 /** Adding the Event Listener that looks for changes in the dropdown menu.
-*   The Event Handler does the following:
-*   1. Turning the color label visible.
-*   2. Changes the array index according to the chosen design (0 or 1) and displaying the color.
-*   3. Gets the corresponding value in the two arrays of objects (display options and the default selected option).
+ * 
+ *  The Event Handler does the following:
+ *  1. Turning the color label visible.
+ *  2. Changes the array index according to the chosen design (0 or 1) and displaying the color.
+ *  3. Gets the corresponding value in the two arrays of objects (display options and the default selected option).
 */
 
 design.addEventListener('change', () => {
@@ -109,17 +114,17 @@ design.addEventListener('change', () => {
 });
 
 
-/**
+/******************************************************************************************************
  * 
  *  Register for Activities Section
  * 
- */
+ *****************************************************************************************************/
 
 // Getting DOM elements
 const activities = document.getElementsByClassName('activities');
 const activitiesChildren = activities[0].children;
 
-// Creating and appending DOM elements to show the costs
+// Creating and appending DOM elements to show the costs.
 const costDiv = document.createElement('div');
 costDiv.innerHTML = `<span>Total: </span>`;
 const costSpan = document.createElement('span');
@@ -188,11 +193,11 @@ activities[0].addEventListener('click', (e) => {
 });
 
 
-/**
+/******************************************************************************************************
  * 
  *  Payment Section
  * 
- */
+ *****************************************************************************************************/
 
 
  // Selecting elements by ID and storing "option elements" for "payment" in a variable
@@ -235,3 +240,10 @@ payment.addEventListener('change', (e) => {
     paypal.style.display = displayStatusPayment[paymentMethod][1];
     bitcoin.style.display = displayStatusPayment[paymentMethod][2];
 });
+
+
+/******************************************************************************************************
+ * 
+ *  Form validation
+ * 
+ *****************************************************************************************************/
