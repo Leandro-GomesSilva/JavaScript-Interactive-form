@@ -187,8 +187,9 @@ activities[0].addEventListener('click', (e) => {
 
         }
 
-        // Calls the function every time a checkbox is clicked.
+        // Calls these functions every time a checkbox is clicked.
         showCosts();
+        toogleActivityMessage();
     }
 });
 
@@ -244,6 +245,128 @@ payment.addEventListener('change', (e) => {
 
 /******************************************************************************************************
  * 
- *  Form validation
+ *  Form validation, Part 1:
+ *  Building error messages
  * 
  *****************************************************************************************************/
+
+// Error message for the Activities Session
+const errorActivities = document.createElement('div');
+errorActivities.innerHTML = '<span>You should select at least ONE activity.</span>';
+errorActivities.className = 'badValidationText';
+activities[0].appendChild(errorActivities);
+
+
+// Making the activity message globally accesable through an Arrow Function 
+const toogleActivityMessage = () => {
+    if (errorActivities.style.display === 'none') {
+        errorActivities.style.display = 'inherit';
+    } else errorActivities.style.display = 'none';
+};
+
+
+// Error message for the Register button
+const form = document.getElementsByTagName('form')[0];
+const errorRegister = document.createElement('span');
+errorRegister.innerHTML = 'There are mistakes in your form.<br>Please check the warnings above, correct them and click the button again.';
+errorRegister.className = 'badValidationText';
+errorRegister.style.color = 'crimson';
+errorRegister.style.display = 'none';
+form.appendChild(errorRegister);
+
+
+/******************************************************************************************************
+ * 
+ *  Form validation, Part 2:
+ *  Checking correctness and building Event Listener for the Register Button
+ * 
+ *****************************************************************************************************/
+
+const button = document.getElementsByTagName('button')[0];
+const name = document.getElementById('name');
+const mail = document.getElementById('mail');
+
+const creditCardNumber = document.getElementById('cc-num');
+const creditCardZip = document.getElementById('zip');
+const creditCardCvv = document.getElementById('cvv');
+
+// Arrow Function that returns TRUE or FALSE
+const checkMailValidation = () => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(mail.value);     // Regex-Source: Google -> https://regexr.com/3e48o
+
+// Arrow Function that returns TRUE or FALSE
+const checkCheckboxes = () => {
+    for ( i = 1; i < activitiesChildren.length; i++ ) {       // This "for" starts at 1 because the array position 0 is occupied by the element "legend".
+        if ( activitiesChildren[i].firstElementChild.checked ) {
+            toogleActivityMessage();
+            return true;
+        } 
+    }
+    errorActivities.style.display = 'inherit';
+    return false;
+};
+
+
+/***
+ * `checkCreditCard` function
+ * By using three arrow functions, this function returns true if: 
+ * 1. credit card number, Zip Code AND CVV code are correct 
+ * OR 
+ * 2. payment method is NOT credit card
+ * 
+ * @returns {boolean} True or False
+ * 
+ */
+function checkCreditCard() {
+
+    if ( payment.value = "credit card") {
+
+        // Returns TRUE or FALSE
+        const checkCcNumber = () => /^[0-9]{13,16}$/.test(creditCardNumber.value);
+
+        // Returns TRUE or FALSE
+        const checkCcZip = () => /^[0-9]{5}$/.test(creditCardZip.value);
+
+        // Returns TRUE or FALSE
+        const checkCcCvv = () => /^[0-9]{3}$/.test(creditCardCvv.value);
+
+        return checkCcNumber() && checkCcZip() && checkCcCvv();
+    
+    } else return true; // If payment method is NOT "credit card", this test returns immediately TRUE.
+};
+
+
+// Event Listener for the Register button
+ 
+button.addEventListener('click', (e) => {
+    if ( name.value !== "" && checkMailValidation() && checkCheckboxes() && checkCreditCard() ) {
+        errorRegister.style.display = 'none';
+        alert('Registered');
+    } else {
+        e.preventDefault();
+        errorRegister.style.display = 'inherit';
+    }
+});
+
+
+
+/**
+ *  Rule Number 1: Name Field 
+ */
+
+name.addEventListener('focusout', (e) => {
+    if (e.target.value == "") {
+        name.className = "badValidation";
+    } else name.className = "";
+});
+
+/**
+ *  Rule Number 2: Email Field 
+ */
+
+mail.addEventListener('keyup', (e) => {    
+
+    if ( checkMailValidation() ) {   
+        mail.className = "";
+    } else mail.className = "badValidation";
+
+});

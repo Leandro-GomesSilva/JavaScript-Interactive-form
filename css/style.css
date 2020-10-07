@@ -41,7 +41,7 @@ a {
 form {
 	padding: .875em 1.875em 1.875em;
 	background: #9BBEEF;
-	border: 2px solid rgba(8, 63, 87, 0.6);
+	border: 3px solid rgba(8, 63, 87, 0.6);
 	border-radius: 3px;
 }
 
@@ -54,6 +54,7 @@ button {
 
 fieldset {
 	margin-top: 1.5em;
+	padding: 10;
 }
 
 legend,
@@ -97,7 +98,7 @@ input {
 
 input:focus {
 	background: #fff;
-	border-color: #5e97b0;
+	border-color: #317fa0;
 	transition: border-color .4s, background-color .4s;
 }
 
@@ -115,6 +116,7 @@ button {
 	border: 2px solid black;
 	border-radius: 4px;
 	transition: all 0.5s;
+	
 }
 
 button:hover {
@@ -126,6 +128,7 @@ select,
 option {
 	font-family: 'roboto', sans-serif;
 }
+
 
 /* ================================= 
   Page Styles
@@ -213,4 +216,39 @@ option {
 	label {
 		clear: both;
 	}
+}
+
+
+/* ================================= 
+  My Own Code
+==================================== */
+
+.shirt-colors {
+	max-width: 40%;
+}
+
+#color, 
+.shirt {
+	max-width: 100%;
+}
+
+input:hover {
+	background: #f0f0f0;
+	transition: border-color .4s, background-color .4s;
+	border: 3px solid rgba(8, 63, 87, 0.6);
+}
+
+.badValidation {
+	background: #dab9b3;
+	border: 4px solid rgb(214, 55, 55);
+}
+
+.badValidation:hover {
+	background: #dab9b3;
+	border: 4px solid rgb(214, 55, 55);
+}
+
+.badValidationText {
+	color: crimson;
+	margin-top: 1em;
 }
