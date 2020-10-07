@@ -189,7 +189,7 @@ activities[0].addEventListener('click', (e) => {
 
         // Calls these functions every time a checkbox is clicked.
         showCosts();
-        toogleActivityMessage();
+        toogleActivityMessage();    // See this arrow function below, in the "Form validation, Part 1" session
     }
 });
 
@@ -254,14 +254,17 @@ payment.addEventListener('change', (e) => {
 const errorActivities = document.createElement('div');
 errorActivities.innerHTML = '<span>You should select at least ONE activity.</span>';
 errorActivities.className = 'badValidationText';
+errorActivities.style.display = 'none';
 activities[0].appendChild(errorActivities);
 
 
-// Making the activity message globally accesable through an Arrow Function 
+// Making the activities session message globally accesable through an Arrow Function. It checks the necessity of showing the error massage according to the displayed "Total Value".
 const toogleActivityMessage = () => {
-    if (errorActivities.style.display === 'none') {
+    if ( parseInt(costSpan.textContent) === 0 && errorActivities.style.display === 'none' ) {
         errorActivities.style.display = 'inherit';
-    } else errorActivities.style.display = 'none';
+    } else if ( parseInt(costSpan.textContent) > 0 && errorActivities.style.display === 'inherit' ) {
+        errorActivities.style.display = 'none';
+    }
 };
 
 
@@ -278,7 +281,8 @@ form.appendChild(errorRegister);
 /******************************************************************************************************
  * 
  *  Form validation, Part 2:
- *  Checking correctness and building Event Listener for the Register Button
+ *  Checking correctness of e-mail, checkboxes and (in case it is selected) credit card info 
+ *  and building Event Listener for the Register Button.
  * 
  *****************************************************************************************************/
 
@@ -297,11 +301,10 @@ const checkMailValidation = () => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(mail.
 const checkCheckboxes = () => {
     for ( i = 1; i < activitiesChildren.length; i++ ) {       // This "for" starts at 1 because the array position 0 is occupied by the element "legend".
         if ( activitiesChildren[i].firstElementChild.checked ) {
-            toogleActivityMessage();
             return true;
         } 
     }
-    errorActivities.style.display = 'inherit';
+    toogleActivityMessage();
     return false;
 };
 
@@ -318,7 +321,7 @@ const checkCheckboxes = () => {
  */
 function checkCreditCard() {
 
-    if ( payment.value = "credit card") {
+    if ( payment.value === "credit card") {        // The validation will only validate Credit Card info if Credit Card is the selected payment method.
 
         // Returns TRUE or FALSE
         const checkCcNumber = () => /^[0-9]{13,16}$/.test(creditCardNumber.value);
