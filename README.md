@@ -28,9 +28,9 @@ For exceeding expectations, I:
     > [leave it blank]
 
 As extras, I:
-- added some changes to the CSS to experiment. What should be mention are the changes that helps with the visual error notification:
+- added some changes to the CSS to experiment. What should be mentioned are the changes that helps with the visual error notification:
     > my own red design for "bad validation" cases, including "normal", "focus" and "hover"
-    > a design to indicate "good validation" for the fields "e-mail", "card number", "zip code" and "cvv": once the user enters a correct formated input to these fields, the fields turn into a nice green color (only when "on focus")
+    > a design to indicate "good validation" for the fields "e-mail", "card number", "zip code" and "cvv": once the user enters a correct formatted input to these fields, the fields turn into a nice green color (only when "on focus")
 
 Thanks for the attention.
 Leandro Gomes
