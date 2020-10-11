@@ -232,10 +232,11 @@ option {
 	max-width: 100%;
 }
 
+/* Experimenting with CSS */
 input:hover {
 	background: #f0f0f0;
+	border: 4px solid rgba(2, 17, 24, 0.6);
 	transition: border-color .4s, background-color .4s;
-	border: 3px solid rgba(8, 63, 87, 0.6);
 }
 
 .badValidation {
@@ -244,11 +245,39 @@ input:hover {
 }
 
 .badValidation:hover {
-	background: #dab9b3;
+	background: #c4b9b7;
+	border: 4px solid rgb(90, 10, 10);
+	transition: border-color .4s, background-color .4s;
+}
+
+.badValidation:focus {
+	background: #ffebe7;
 	border: 4px solid rgb(214, 55, 55);
+	transition: border-color .4s, background-color .4s;
+}
+
+/* To make real time validation for e-mail more visual appealing */
+input[id="mail"]:focus {
+	background: #fff;
+	border: 4px solid;
+	border-color: #31a036;
+	transition: border-color .4s, background-color .4s;
+}
+
+.badValidation[id="mail"]:focus {
+	background: #ffebe7;
+	border: 4px solid rgb(214, 55, 55);
+	transition: border-color .4s, background-color .4s;
 }
 
 .badValidationText {
 	color: crimson;
 	margin-top: 1em;
+}
+
+#name + div.badValidationText,
+#mail + div.badValidationText {
+	color: crimson;
+	margin-top: 0em;
+	margin-bottom: 2em;
 }

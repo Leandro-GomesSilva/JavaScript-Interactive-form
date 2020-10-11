@@ -56,7 +56,7 @@ colorDiv.style.display = 'none';
 /******************************************************************************************************
  * 
  *  T-Shirt Info Section, Part 2:
- *  Setting the color options to only display for the matching design
+ *  Setting the color options for the matching design
  * 
  *****************************************************************************************************/
 
@@ -89,6 +89,7 @@ const selectedArray = [ { cornflowerblue: true }, { tomato: true } ];
 
 // Initializing the arrayIndex variable
 let arrayIndex = -1;
+
 
 /** Adding the Event Listener that looks for changes in the dropdown menu.
  * 
@@ -189,7 +190,7 @@ activities[0].addEventListener('click', (e) => {
 
         // Calls these functions every time a checkbox is clicked.
         showCosts();
-        toogleActivityMessage();    // See this arrow function below, in the "Form validation, Part 1" session
+        toogleActivityMessage();    // See this arrow function below, in the "Form validation" session
     }
 });
 
@@ -227,7 +228,7 @@ bitcoin.style.display = 'none';
 
 payment.addEventListener('change', (e) => { 
     
-    const paymentMethod = e.target.value.replace(/\s+/, "");    // This "replace" is needed, since the "value" of the credit card option is written with a space and I couldn't declare the corresponding object property with a space.
+    const paymentMethod = e.target.value.replace(/\s+/, "");    // This "replace" is needed to remove the spaces, since the property "value" of the credit card option is written with a space and I couldn't declare the corresponding "object property" with a space.
 
     // Object, whose properties are arrays containing the display options for each payment method
     const displayStatusPayment = {
@@ -245,10 +246,110 @@ payment.addEventListener('change', (e) => {
 
 /******************************************************************************************************
  * 
- *  Form validation, Part 1:
- *  Building error messages
+ *  Form validation:
+ *  Checking correctness for name, e-mail, checkboxes and (in case it is selected) credit card info 
+ *  and building Event Listener for the Register Button.
  * 
  *****************************************************************************************************/
+
+/******************************************
+ * Name
+ *****************************************/
+
+const name = document.getElementById('name');
+
+// Error message for the Name session
+const fieldset = document.getElementsByTagName('fieldset')[0];
+const mailLabel = document.querySelector('label[for="mail"]');
+const errorMessageNameField = document.createElement('div');
+errorMessageNameField.innerHTML = '<span>The name field may not be left blank.</span>';
+errorMessageNameField.className = 'badValidationText';
+errorMessageNameField.style.display = 'none';
+fieldset.insertBefore(errorMessageNameField, mailLabel);
+
+/***
+ * `checkNameField` function
+ * This function returns FALSE if the name field is left blank. 
+ * Otherwise it returns TRUE.
+ * 
+ * @returns {boolean} True or False
+ * 
+ */
+function checkNameField() {
+    if ( name.value === "" ) {
+        name.className = "badValidation";
+        errorMessageNameField.style.display = 'inherit';
+        return true;
+    } else {
+        name.className = "";
+        errorMessageNameField.style.display = 'none';
+        return false;
+    }
+}
+
+// Event Listener 
+name.addEventListener( 'focusout', checkNameField );
+
+
+/******************************************
+ * E-mail
+ *****************************************/
+
+const mail = document.getElementById('mail');
+
+// Error message for the E-Mail session
+const titleLabel = document.querySelector('label[for="title"]');
+const errorMessageEmailField = document.createElement('div');
+errorMessageEmailField.className = 'badValidationText';
+errorMessageEmailField.style.display = 'none';
+fieldset.insertBefore(errorMessageEmailField, titleLabel);
+
+/***
+ * `checkMailField` function
+ * This function returns the evaluation of the "value" in the e-mail input field according to a Regex for e-mail validation. 
+ * The function evaluates different criteria for the "value" in the e-mail and gives conditional error messages.
+ * 
+ * @returns {boolean} True or False
+ * 
+ */
+function checkMailField() {
+
+    // Variable gets TRUE or FALSE
+    const emailFormatCorrect = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/g.test(mail.value);     // Regex-Source: Google -> https://regexr.com/3e48o
+    
+    if (emailFormatCorrect) {
+        mail.className = "";
+        errorMessageEmailField.style.display = 'none';
+        return emailFormatCorrect;
+    } else {
+        mail.className = "badValidation";
+        errorMessageEmailField.style.display = 'inherit';
+    }
+
+    // The Regex below I created by myself with try and error having the regex above as start point.
+    if (mail.value === "") {
+        errorMessageEmailField.innerHTML = '<span>The e-mail field may not be left blank.';
+    } else if ( /([\W]+@|[\W]\w+@|^\W)/g.test(mail.value) ) {
+        errorMessageEmailField.innerHTML = '<span>Please only use letters (A-Z or a-z), numbers (0-9), periods (.), underscores (_) or hyphens (-) before the at sign (@).'
+    } else if ( /@/.test(mail.value) === false ) {
+        errorMessageEmailField.innerHTML = '<span>The e-mail must contain an at sign (@).'
+    } else if ( /@([\w-]+\.)+([\w-]{4,}|[\w-]{1})$/g.test(mail.value) ) {
+        errorMessageEmailField.innerHTML = '<span>The domain should contain 2 or 3 letters (e.g. ".com", ".gov", ".edu", ".uk", ".de", ".ca", ".br" etc.).'
+    } else if ( /(@\W|@\w+\W)/g.test(mail.value) ) {
+        errorMessageEmailField.innerHTML = '<span>Please only use letters (A-Z or a-z), numbers (0-9), periods (.), underscores (_) or hyphens (-) after the at sign (@).'
+    } else errorMessageEmailField.innerHTML = '<span>Please insert an e-mail that follows the format "name@domain.com" or similar.'
+
+    return emailFormatCorrect;
+
+}
+
+// Event Listener
+mail.addEventListener( 'keyup', checkMailField );
+
+
+/******************************************
+ * Checkboxes i.e. activities session
+ *****************************************/
 
 // Error message for the Activities Session
 const errorActivities = document.createElement('div');
@@ -268,37 +369,16 @@ const toogleActivityMessage = () => {
 };
 
 
-// Error message for the Register button
-const form = document.getElementsByTagName('form')[0];
-const errorRegister = document.createElement('span');
-errorRegister.innerHTML = 'There are mistakes in your form.<br>Please check the warnings above, correct them and click the button again.';
-errorRegister.className = 'badValidationText';
-errorRegister.style.color = 'crimson';
-errorRegister.style.display = 'none';
-form.appendChild(errorRegister);
-
-
-/******************************************************************************************************
+/***
+ * `checkCheckboxes` function
+ * It checks if any checkbox is checked and returns true immediately if it founds one.
+ * It will toogle the activity error message and return FALSE if no checkbox is checked.
  * 
- *  Form validation, Part 2:
- *  Checking correctness of e-mail, checkboxes and (in case it is selected) credit card info 
- *  and building Event Listener for the Register Button.
+ * @returns {boolean} True or False
  * 
- *****************************************************************************************************/
+ */
+function checkCheckboxes() {
 
-const button = document.getElementsByTagName('button')[0];
-const name = document.getElementById('name');
-const mail = document.getElementById('mail');
-
-const creditCardNumber = document.getElementById('cc-num');
-const creditCardZip = document.getElementById('zip');
-const creditCardCvv = document.getElementById('cvv');
-
-// Arrow Function that returns TRUE or FALSE
-const checkMailValidation = () => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(mail.value);     // Regex-Source: Google -> https://regexr.com/3e48o
-
-// Arrow Function that returns TRUE or FALSE
-const checkCheckboxes = () => {
     for ( i = 1; i < activitiesChildren.length; i++ ) {       // This "for" starts at 1 because the array position 0 is occupied by the element "legend".
         if ( activitiesChildren[i].firstElementChild.checked ) {
             return true;
@@ -306,8 +386,23 @@ const checkCheckboxes = () => {
     }
     toogleActivityMessage();
     return false;
-};
+}
 
+
+/******************************************
+ * Payment method
+ *****************************************/
+
+const divCreditCard = document.getElementById('credit-card');
+ const creditCardNumber = document.getElementById('cc-num');
+const creditCardZip = document.getElementById('zip');
+const creditCardCvv = document.getElementById('cvv');
+
+// Error message for the Payment method
+const errorMessagePayment = document.createElement('div');
+errorMessagePayment.className = 'badValidationText';
+errorMessagePayment.style.display = 'none';
+divCreditCard.appendChild(errorMessagePayment);
 
 /***
  * `checkCreditCard` function
@@ -332,44 +427,57 @@ function checkCreditCard() {
         // Returns TRUE or FALSE
         const checkCcCvv = () => /^[0-9]{3}$/.test(creditCardCvv.value);
 
+        
+        errorMessagePayment.style.display = 'none';
+        
+        objecto = {
+            checkCcNumber = {
+                true: "",
+                false: ""
+            },
+            checkCcZip = {
+                true: "",
+                false: 
+            },
+            checkCcCvv = {
+                true: "",
+                false: 
+            }
+        }
+
+        //errorMessagePayment.innerHTML = '<span>You should select at least ONE activity.</span>';
+
+        objeto[checkCcNumber][checkCcNumber()]
+
         return checkCcNumber() && checkCcZip() && checkCcCvv();
     
     } else return true; // If payment method is NOT "credit card", this test returns immediately TRUE.
-};
+}
 
 
-// Event Listener for the Register button
- 
+
+/******************************************
+ * Event Listener for the Register button
+ *****************************************/
+
+const form = document.getElementsByTagName('form')[0];
+const button = document.getElementsByTagName('button')[0];
+
+// Error message
+const errorRegister = document.createElement('span');
+errorRegister.innerHTML = 'There are mistakes in your form.<br>Please check the warnings above, correct them and click the button again.';
+errorRegister.className = 'badValidationText';
+errorRegister.style.color = 'crimson';
+errorRegister.style.display = 'none';
+form.appendChild(errorRegister);
+
+// Event Listener
 button.addEventListener('click', (e) => {
-    if ( name.value !== "" && checkMailValidation() && checkCheckboxes() && checkCreditCard() ) {
+    if ( checkNameField() && checkMailField() && checkCheckboxes() && checkCreditCard() ) {
         errorRegister.style.display = 'none';
         alert('Registered');
     } else {
         e.preventDefault();
         errorRegister.style.display = 'inherit';
     }
-});
-
-
-
-/**
- *  Rule Number 1: Name Field 
- */
-
-name.addEventListener('focusout', (e) => {
-    if (e.target.value == "") {
-        name.className = "badValidation";
-    } else name.className = "";
-});
-
-/**
- *  Rule Number 2: Email Field 
- */
-
-mail.addEventListener('keyup', (e) => {    
-
-    if ( checkMailValidation() ) {   
-        mail.className = "";
-    } else mail.className = "badValidation";
-
 });
