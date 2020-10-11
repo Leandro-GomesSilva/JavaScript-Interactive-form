@@ -44,14 +44,24 @@ const colorDiv = document.getElementById('shirt-colors');
 const color = document.getElementById('color');
 const colorChildren = color.children;
 
- 
 // For the label "Design": setting the first option "Select Theme" as a hidden and not-selectable value (it can be done in the HTML as default as well).
 const designFirstChild = design.firstElementChild;
 designFirstChild.selected = true;
 designFirstChild.hidden = true;
 
-// Hidding the Color Label, since no design is selected by default.
-colorDiv.style.display = 'none';
+// For the label "Color"
+const pleaseSelectTheme = document.createElement('OPTION');
+pleaseSelectTheme.textContent = 'Please select a T-shirt theme';
+color.insertBefore(pleaseSelectTheme, color.firstElementChild);
+pleaseSelectTheme.value = 'pleaseSelectTheme';
+pleaseSelectTheme.selected = true;
+pleaseSelectTheme.hidden = true;
+
+// Hiding all colors by default
+for ( i = 1; i < colorChildren.length; i++ ) {  // This for starts at 1, because the position 0 of the array "colorChildren" is ocupied by the "pleaseSelectTheme" option.
+    colorChildren[i].style.display = 'none';
+}
+
 
 /******************************************************************************************************
  * 
@@ -85,7 +95,7 @@ const displayArray = [
 ];
 
 // This second array of objects determines which option will "selected" i.e. "default" for each design.
-const selectedArray = [ { cornflowerblue: true }, { tomato: true } ];
+const standardOption = [ { cornflowerblue: true }, { tomato: true } ];
 
 // Initializing the arrayIndex variable
 let arrayIndex = -1;
@@ -110,7 +120,7 @@ design.addEventListener('change', () => {
 
     for ( i = 0; i < colorChildren.length; i++ ) {
         colorChildren[i].style.display = displayArray[arrayIndex][colorChildren[i].value];
-        colorChildren[i].selected = selectedArray[arrayIndex][colorChildren[i].value];
+        colorChildren[i].selected = standardOption[arrayIndex][colorChildren[i].value];
     }
 });
 
@@ -448,17 +458,17 @@ function checkCreditCard(e) {
         const checkCcCvv = () => /^[0-9]{3}$/.test(creditCardCvv.value);
 
         // Builds error message and error indication using an object of arrays. The 0-position of the arrays corresponds to the style.display value and the 1-position corresponds to a className. 
-        displayMessages = { true: ["none", ""], false: ["inherit", "badValidation"] }
+        ccErrorIndication = { true: ["none", ""], false: ["inherit", "badValidation"] }
         
         // Show or hide error indicators: I totally avoided using IFs and managed to compact all code in one line per input field using the short-circuit capability of JavaScript
-        e.target.id === "cc-num" && (errorMessageCardNumber.style.display = displayMessages[checkCcNumber()][0]) && (creditCardNumber.className = displayMessages[checkCcNumber()][1]);
-        e.target.id === "zip" && (errorMessageZipCode.style.display = displayMessages[checkCcZip()][0]) && (creditCardZip.className = displayMessages[checkCcZip()][1]);
-        e.target.id === "cvv" && (errorMessageCvvNumber.style.display = displayMessages[checkCcCvv()][0]) && (creditCardCvv.className = displayMessages[checkCcCvv()][1]);
+        e.target.id === "cc-num" && (errorMessageCardNumber.style.display = ccErrorIndication[checkCcNumber()][0]) && (creditCardNumber.className = ccErrorIndication[checkCcNumber()][1]);
+        e.target.id === "zip" && (errorMessageZipCode.style.display = ccErrorIndication[checkCcZip()][0]) && (creditCardZip.className = ccErrorIndication[checkCcZip()][1]);
+        e.target.id === "cvv" && (errorMessageCvvNumber.style.display = ccErrorIndication[checkCcCvv()][0]) && (creditCardCvv.className = ccErrorIndication[checkCcCvv()][1]);
 
         // Similar as above but for the button clicking
-        e.target.tagName == 'BUTTON' && (errorMessageCardNumber.style.display = displayMessages[checkCcNumber()][0]) && (creditCardNumber.className = displayMessages[checkCcNumber()][1]);
-        e.target.tagName == 'BUTTON' && (errorMessageZipCode.style.display = displayMessages[checkCcZip()][0]) && (creditCardZip.className = displayMessages[checkCcZip()][1]);
-        e.target.tagName == 'BUTTON' && (errorMessageCvvNumber.style.display = displayMessages[checkCcCvv()][0]) && (creditCardCvv.className = displayMessages[checkCcCvv()][1]);
+        e.target.tagName == 'BUTTON' && (errorMessageCardNumber.style.display = ccErrorIndication[checkCcNumber()][0]) && (creditCardNumber.className = ccErrorIndication[checkCcNumber()][1]);
+        e.target.tagName == 'BUTTON' && (errorMessageZipCode.style.display = ccErrorIndication[checkCcZip()][0]) && (creditCardZip.className = ccErrorIndication[checkCcZip()][1]);
+        e.target.tagName == 'BUTTON' && (errorMessageCvvNumber.style.display = ccErrorIndication[checkCcCvv()][0]) && (creditCardCvv.className = ccErrorIndication[checkCcCvv()][1]);
 
         return checkCcNumber() && checkCcZip() && checkCcCvv();
 
