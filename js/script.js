@@ -53,7 +53,6 @@ designFirstChild.hidden = true;
 const pleaseSelectTheme = document.createElement('OPTION');
 pleaseSelectTheme.textContent = 'Please select a T-shirt theme';
 color.insertBefore(pleaseSelectTheme, color.firstElementChild);
-pleaseSelectTheme.value = 'pleaseSelectTheme';
 pleaseSelectTheme.selected = true;
 pleaseSelectTheme.hidden = true;
 
@@ -62,6 +61,14 @@ for ( i = 1; i < colorChildren.length; i++ ) {  // This for starts at 1, because
     colorChildren[i].style.display = 'none';
 }
 
+
+/******************************************************************************************************
+ * For "Exceeds Expectations": 
+ * Hidding the Color Label, since no design is selected by default.
+ * The label will be unhidden in the IF-Statement below, in case the value of "Design" 
+ * changes to "js puns" or "heart js".
+ *****************************************************************************************************/
+colorDiv.style.display = 'none';
 
 /******************************************************************************************************
  * 
@@ -110,12 +117,13 @@ let arrayIndex = -1;
 */
 
 design.addEventListener('change', () => {
-    colorDiv.style.display = 'inherit';
     
     if (design.value === "js puns") {
+        colorDiv.style.display = 'inherit';
         arrayIndex = 0;
     } else if (design.value === "heart js") {
-        arrayIndex = 1;
+        colorDiv.style.display = 'inherit';
+        arrayIndex = 1;        
     }
 
     for ( i = 0; i < colorChildren.length; i++ ) {
