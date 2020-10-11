@@ -256,15 +256,21 @@ input:hover {
 	transition: border-color .4s, background-color .4s;
 }
 
-/* To make real time validation for e-mail more visual appealing */
-input[id="mail"]:focus {
+/* To make real time validation more visual appealing */
+input[id="mail"]:focus,
+input[id="cc-num"]:focus,
+input[id="zip"]:focus,
+input[id="cvv"]:focus {
 	background: #fff;
 	border: 4px solid;
 	border-color: #31a036;
-	transition: border-color .4s, background-color .4s;
+	transition: border-color .1s, background-color .1s;
 }
 
-.badValidation[id="mail"]:focus {
+.badValidation[id="mail"]:focus,
+.badValidation[id="cc-num"]:focus,
+.badValidation[id="zip"]:focus,
+.badValidation[id="cvv"]:focus {
 	background: #ffebe7;
 	border: 4px solid rgb(214, 55, 55);
 	transition: border-color .4s, background-color .4s;
@@ -276,7 +282,10 @@ input[id="mail"]:focus {
 }
 
 #name + div.badValidationText,
-#mail + div.badValidationText {
+#mail + div.badValidationText,
+#cc-num + div.badValidationText,
+#zip + div.badValidationText,
+#cvv + div.badValidationText {
 	color: crimson;
 	margin-top: 0em;
 	margin-bottom: 2em;

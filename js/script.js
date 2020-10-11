@@ -72,7 +72,7 @@ const displayArray = [
         gold: 'inherit',
         tomato: 'none',
         steelblue: 'none',
-        dimgrey: 'none',
+        dimgrey: 'none'
     },
     {
         cornflowerblue: 'none',
@@ -80,7 +80,7 @@ const displayArray = [
         gold: 'none',
         tomato: 'inherit',
         steelblue: 'inherit',
-        dimgrey: 'inherit',
+        dimgrey: 'inherit'
     }
 ];
 
@@ -234,7 +234,7 @@ payment.addEventListener('change', (e) => {
     const displayStatusPayment = {
         creditcard: ['inherit', 'none', 'none'],
         paypal: ['none', 'inherit', 'none'],
-        bitcoin: ['none', 'none', 'inherit'],
+        bitcoin: ['none', 'none', 'inherit']
     };
 
     // These 3 lines of code below substitute three boring IF-statements
@@ -279,11 +279,11 @@ function checkNameField() {
     if ( name.value === "" ) {
         name.className = "badValidation";
         errorMessageNameField.style.display = 'inherit';
-        return true;
+        return false;
     } else {
         name.className = "";
         errorMessageNameField.style.display = 'none';
-        return false;
+        return true;
     }
 }
 
@@ -345,6 +345,7 @@ function checkMailField() {
 
 // Event Listener
 mail.addEventListener( 'keyup', checkMailField );
+mail.addEventListener( 'focusout', checkMailField );
 
 
 /******************************************
@@ -394,15 +395,34 @@ function checkCheckboxes() {
  *****************************************/
 
 const divCreditCard = document.getElementById('credit-card');
- const creditCardNumber = document.getElementById('cc-num');
+const creditCardNumber = document.getElementById('cc-num');
 const creditCardZip = document.getElementById('zip');
 const creditCardCvv = document.getElementById('cvv');
 
-// Error message for the Payment method
-const errorMessagePayment = document.createElement('div');
-errorMessagePayment.className = 'badValidationText';
-errorMessagePayment.style.display = 'none';
-divCreditCard.appendChild(errorMessagePayment);
+// Error messages for the Payment method
+
+    // CC number
+const errorMessageCardNumber = document.createElement('div');
+errorMessageCardNumber.className = 'badValidationText';
+errorMessageCardNumber.innerHTML = '<span>Enter between 13 and 16 digits.</span>';
+errorMessageCardNumber.style.display = 'none';
+creditCardNumber.parentNode.appendChild(errorMessageCardNumber);
+
+    // ZIP code
+const errorMessageZipCode = document.createElement('div');
+errorMessageZipCode.className = 'badValidationText';
+errorMessageZipCode.innerHTML = '<span>Enter 5 digits.</span>';
+errorMessageZipCode.style.display = 'none';
+creditCardZip.parentNode.appendChild(errorMessageZipCode);
+
+    // CVV number
+const errorMessageCvvNumber = document.createElement('div');
+errorMessageCvvNumber.className = 'badValidationText';
+errorMessageCvvNumber.innerHTML = '<span>Enter 3 digits.</span>';
+errorMessageCvvNumber.style.display = 'none';
+creditCardCvv.parentNode.appendChild(errorMessageCvvNumber);
+
+
 
 /***
  * `checkCreditCard` function
@@ -427,33 +447,32 @@ function checkCreditCard() {
         // Returns TRUE or FALSE
         const checkCcCvv = () => /^[0-9]{3}$/.test(creditCardCvv.value);
 
+        // Builds error message and error indication using an object of arrays
+        displayMessages = { true: ["", "none"], false: ["badValidation", "inherit"] }
         
-        errorMessagePayment.style.display = 'none';
+        // Show or hide error indicators
+        creditCardNumber.className = displayMessages[checkCcNumber()][0];
+        creditCardZip.className = displayMessages[checkCcZip()][0];
+        creditCardCvv.className = displayMessages[checkCcCvv()][0];
         
-        objecto = {
-            checkCcNumber = {
-                true: "",
-                false: ""
-            },
-            checkCcZip = {
-                true: "",
-                false: 
-            },
-            checkCcCvv = {
-                true: "",
-                false: 
-            }
-        }
-
-        //errorMessagePayment.innerHTML = '<span>You should select at least ONE activity.</span>';
-
-        objeto[checkCcNumber][checkCcNumber()]
+        // Display or hide error messages
+        errorMessageCardNumber.style.display = displayMessages[checkCcNumber()][1];
+        errorMessageZipCode.style.display = displayMessages[checkCcZip()][1];
+        errorMessageCvvNumber.style.display = displayMessages[checkCcCvv()][1];
 
         return checkCcNumber() && checkCcZip() && checkCcCvv();
-    
+
     } else return true; // If payment method is NOT "credit card", this test returns immediately TRUE.
 }
 
+// Event listeners for real time error indication
+creditCardNumber.addEventListener( 'keyup', checkCreditCard );
+creditCardZip.addEventListener( 'keyup', checkCreditCard );
+creditCardCvv.addEventListener( 'keyup', checkCreditCard );
+
+creditCardNumber.addEventListener( 'focusout', checkCreditCard );
+creditCardZip.addEventListener( 'focusout', checkCreditCard );
+creditCardCvv.addEventListener( 'focusout', checkCreditCard );
 
 
 /******************************************
@@ -465,7 +484,7 @@ const button = document.getElementsByTagName('button')[0];
 
 // Error message
 const errorRegister = document.createElement('span');
-errorRegister.innerHTML = 'There are mistakes in your form.<br>Please check the warnings above, correct them and click the button again.';
+errorRegister.innerHTML = 'There are mistakes in your form.<br>Please check the warnings above, correct them and click the Register button again.';
 errorRegister.className = 'badValidationText';
 errorRegister.style.color = 'crimson';
 errorRegister.style.display = 'none';
@@ -473,6 +492,13 @@ form.appendChild(errorRegister);
 
 // Event Listener
 button.addEventListener('click', (e) => {
+
+    // Since JavaScript short-circuits the if-statement below, I had to ensure that every function is run before preventing Default.
+    checkNameField();
+    checkMailField();
+    checkCheckboxes();
+    checkCreditCard();
+
     if ( checkNameField() && checkMailField() && checkCheckboxes() && checkCreditCard() ) {
         errorRegister.style.display = 'none';
         alert('Registered');
