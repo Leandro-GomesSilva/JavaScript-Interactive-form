@@ -24,7 +24,7 @@ For exceeding expectations, I:
     > noSpecialSymbols@After§$%gmail.com
     > atSignMustBeIncluded
     > theDomainNameMustHave@twoOrThreeLetters.abcd
-    > [leave it uncomplete] abcde@
+    > [leave it incomplete] abcde@
     > [leave it blank]
 
 As extras, I:
