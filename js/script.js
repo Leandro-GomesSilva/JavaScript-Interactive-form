@@ -434,7 +434,7 @@ creditCardCvv.parentNode.appendChild(errorMessageCvvNumber);
  * @returns {boolean} True or False
  * 
  */
-function checkCreditCard() {
+function checkCreditCard(e) {
 
     if ( payment.value === "credit card") {        // The validation will only validate Credit Card info if Credit Card is the selected payment method.
 
@@ -447,18 +447,18 @@ function checkCreditCard() {
         // Returns TRUE or FALSE
         const checkCcCvv = () => /^[0-9]{3}$/.test(creditCardCvv.value);
 
-        // Builds error message and error indication using an object of arrays
-        displayMessages = { true: ["", "none"], false: ["badValidation", "inherit"] }
+        // Builds error message and error indication using an object of arrays. The 0-position of the arrays corresponds to the style.display value and the 1-position corresponds to a className. 
+        displayMessages = { true: ["none", ""], false: ["inherit", "badValidation"] }
         
-        // Show or hide error indicators
-        creditCardNumber.className = displayMessages[checkCcNumber()][0];
-        creditCardZip.className = displayMessages[checkCcZip()][0];
-        creditCardCvv.className = displayMessages[checkCcCvv()][0];
-        
-        // Display or hide error messages
-        errorMessageCardNumber.style.display = displayMessages[checkCcNumber()][1];
-        errorMessageZipCode.style.display = displayMessages[checkCcZip()][1];
-        errorMessageCvvNumber.style.display = displayMessages[checkCcCvv()][1];
+        // Show or hide error indicators: I totally avoided using IFs and managed to compact all code in one line per input field using the short-circuit capability of JavaScript
+        e.target.id === "cc-num" && (errorMessageCardNumber.style.display = displayMessages[checkCcNumber()][0]) && (creditCardNumber.className = displayMessages[checkCcNumber()][1]);
+        e.target.id === "zip" && (errorMessageZipCode.style.display = displayMessages[checkCcZip()][0]) && (creditCardZip.className = displayMessages[checkCcZip()][1]);
+        e.target.id === "cvv" && (errorMessageCvvNumber.style.display = displayMessages[checkCcCvv()][0]) && (creditCardCvv.className = displayMessages[checkCcCvv()][1]);
+
+        // Similar as above but for the button clicking
+        e.target.tagName == 'BUTTON' && (errorMessageCardNumber.style.display = displayMessages[checkCcNumber()][0]) && (creditCardNumber.className = displayMessages[checkCcNumber()][1]);
+        e.target.tagName == 'BUTTON' && (errorMessageZipCode.style.display = displayMessages[checkCcZip()][0]) && (creditCardZip.className = displayMessages[checkCcZip()][1]);
+        e.target.tagName == 'BUTTON' && (errorMessageCvvNumber.style.display = displayMessages[checkCcCvv()][0]) && (creditCardCvv.className = displayMessages[checkCcCvv()][1]);
 
         return checkCcNumber() && checkCcZip() && checkCcCvv();
 
@@ -466,13 +466,13 @@ function checkCreditCard() {
 }
 
 // Event listeners for real time error indication
-creditCardNumber.addEventListener( 'keyup', checkCreditCard );
-creditCardZip.addEventListener( 'keyup', checkCreditCard );
-creditCardCvv.addEventListener( 'keyup', checkCreditCard );
+creditCardNumber.addEventListener( 'keyup', (e) => { checkCreditCard(e); });
+creditCardZip.addEventListener( 'keyup', (e) => { checkCreditCard(e); });
+creditCardCvv.addEventListener( 'keyup', (e) => { checkCreditCard(e); });
 
-creditCardNumber.addEventListener( 'focusout', checkCreditCard );
-creditCardZip.addEventListener( 'focusout', checkCreditCard );
-creditCardCvv.addEventListener( 'focusout', checkCreditCard );
+creditCardNumber.addEventListener( 'focusout', (e) => { checkCreditCard(e); });
+creditCardZip.addEventListener( 'focusout', (e) => { checkCreditCard(e); });
+creditCardCvv.addEventListener( 'focusout', (e) => { checkCreditCard(e); });
 
 
 /******************************************
@@ -493,16 +493,17 @@ form.appendChild(errorRegister);
 // Event Listener
 button.addEventListener('click', (e) => {
 
-    // Since JavaScript short-circuits the if-statement below, I had to ensure that every function is run before preventing Default.
-    checkNameField();
-    checkMailField();
-    checkCheckboxes();
-    checkCreditCard();
-
-    if ( checkNameField() && checkMailField() && checkCheckboxes() && checkCreditCard() ) {
+    if ( checkNameField() && checkMailField() && checkCheckboxes() && checkCreditCard(e) ) {
         errorRegister.style.display = 'none';
         alert('Registered');
-    } else {
+    } else {  
+        // Since JavaScript short-circuits the if-statement above, I have to ensure that every function is run.
+        checkNameField();
+        checkMailField();
+        checkCheckboxes();
+        checkCreditCard(e);
+
+        // Preventing Default behaviour
         e.preventDefault();
         errorRegister.style.display = 'inherit';
     }
