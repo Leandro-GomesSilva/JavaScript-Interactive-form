@@ -1,7 +1,10 @@
-# techdegree-javascript-project-3
- My 3rd project on the Full Stack JavaScript Techdegree: Interactive form.
-
-In this project, JavaScript was used to enhance an interactive registration form for a fictional conference called "FullStack Conf."
+# JavaScript - Interactive form
+ The 3rd project on the Full Stack JavaScript Techdegree. In this application, JavaScript was used to enhance an interactive registration form for a fictional conference. The application applies conditional behaviour to various input fields, validates user input and provides the corresponding visual indication in real-time.
+ 
+ Main technologies: JavaScript<br>
+ Auxiliary technologies: HTML, CSS<br>
+ Complexity level: Beginner<br>
+ Concepts: Input validation, Conditional fields, DOM manipulation, Regex, Event Object, Event listeners, CSS basic effects, HTML elements<br>
 
 For meeting expectations, I:
 - set focus on first text field when page loads (via HTML).
