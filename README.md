@@ -1,4 +1,4 @@
-# JavaScript - Interactive form
+# JavaScript: Interactive form
  The 3rd project on the Full Stack JavaScript Techdegree. In this application, JavaScript was used to enhance an interactive registration form for a fictional conference. The application applies conditional behaviour to various input fields, validates user input and provides the corresponding visual indication in real-time.
  
  Main technologies: JavaScript<br>
